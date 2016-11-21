@@ -1,5 +1,5 @@
 var express = require('express');
-var volleyball = require('volleyball');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var chalk = require('chalk');
 var path = require('path');
@@ -8,10 +8,14 @@ var routes = require('./routes');
 
 var app = express();
 
-app.use(volleyball);
+app.use(morgan('      ↓ received :method :url · responded :status :res[Content-Type]'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', function (req, res, next) {
+  res.send('Welcome to Articles! Check out our lovely routes.');
+});
 
 app.use('/', routes);
 

@@ -104,6 +104,14 @@ describe('The `Article` model', function () {
 
   });
 
+/**
+ * SPECIAL NOTE: at this point, you have defined enough of the Article model to
+ * move on to the Routes tests. The rest of these specs, while necessary to
+ * fully pass the Model suite, are not necessary for the Routes suite. Bear in
+ * mind that the Routes suite depends on a WORKING model, so if you break the
+ * Article model in your code below, the Routes will also fail. Make commits!
+ */
+
   describe('options definition', function(){
 
     describe('`snippet` virtual field', function(){

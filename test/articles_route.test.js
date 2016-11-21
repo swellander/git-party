@@ -2,11 +2,14 @@
 
 
 var expect = require('chai').expect;
-var request = require('supertest');
+var request = require('supertest-as-promised');
+
 var app = require('../app');
-var Article = require('../models/article');
 var agent = request.agent(app);
+
 var db = require('../models/database');
+var Article = require('../models/article');
+var User = require('../models/user');
 
 /**
  *
@@ -22,6 +25,16 @@ describe('Articles Route:', function () {
    */
   before(function () {
     return db.sync({force: true});
+  });
+
+  /**
+   * Also, we empty the tables after each spec
+   */
+  afterEach(function () {
+    return Promise.all([
+      Article.truncate({ cascade: true }),
+      User.truncate({ cascade: true })
+    ]);
   });
 
   describe('GET /articles', function () {
@@ -84,12 +97,19 @@ describe('Articles Route:', function () {
      */
     xit('returns another article if there is one in the DB', function () {
 
-      var article = Article.build({
+      var article1 = Article.build({
+        title: 'Test Article',
+        content: 'Test body'
+      });
+
+      var article2 = Article.build({
         title: 'Another Test Article',
         content: 'Another test body'
       });
 
-      return article.save().then(function () {
+      return article1.save()
+      .then(function () { return article2.save() })
+      .then(function () {
 
         return agent
         .get('/articles')
@@ -111,17 +131,26 @@ describe('Articles Route:', function () {
    */
   describe('GET /articles/:id', function () {
 
-    var article;
+    var coolArticle;
 
-    // create another article for test
-    before(function () {
+    beforeEach(function () {
 
-      article = Article.build({
-        title: 'Second Article',
-        content: 'This article is good'
+      var creatingArticles = [{
+        title: 'Boring article',
+        content: 'This article is boring'
+      }, {
+        title: 'Cool Article',
+        content: 'This article is cool'
+      }, {
+        title: 'Riveting Article',
+        content: 'This article is riveting'
+      }]
+      .map(data => Article.create(data));
+
+      return Promise.all(creatingArticles)
+      .then(createdArticles => {
+        coolArticle = createdArticles[1];
       });
-
-      return article.save();
 
     });
 
@@ -132,13 +161,13 @@ describe('Articles Route:', function () {
     xit('returns the JSON of the article based on the id', function () {
 
       return agent
-      .get('/articles/' + article.id)
+      .get('/articles/' + coolArticle.id)
       .expect(200)
       .expect(function (res) {
         if (typeof res.body === 'string') {
           res.body = JSON.parse(res.body);
         }
-        expect(res.body.title).to.equal('Second Article');
+        expect(res.body.title).to.equal('Cool Article');
       });
 
     });
@@ -149,7 +178,7 @@ describe('Articles Route:', function () {
     xit('returns a 404 error if the ID is not correct', function () {
 
       return agent
-      .get('/articles/74')
+      .get('/articles/76142896')
       .expect(404);
 
     });
@@ -165,7 +194,7 @@ describe('Articles Route:', function () {
     /**
      * Test the creation of an article
      * Here we don't get back just the article, we get back a Object
-     * of this type:
+     * of this type, which you construct manually:
      *
      * {
      *   message: 'Created successfully'
@@ -208,20 +237,27 @@ describe('Articles Route:', function () {
     // Check if the articles were actually saved to the database
     xit('saves the article to the DB', function () {
 
-      return Article.findOne({
-        where: {
-          title: 'Awesome POST-Created Article'
-        }
+      return agent
+      .post('/articles')
+      .send({
+        title: 'Awesome POST-Created Article',
+        content: 'Can you believe I did this in a test?'
       })
-      .then(function (article) {
-        expect(article).to.exist; // eslint-disable-line no-unused-expressions
-        expect(article.content).to.equal('Can you believe I did this in a test?');
+      .expect(200)
+      .then(function () {
+        return Article.findOne({
+          where: { title: 'Awesome POST-Created Article' }
+        });
+      })
+      .then(function (foundArticle) {
+        expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
+        expect(foundArticle.content).to.equal('Can you believe I did this in a test?');
       });
 
     });
 
     // Do not assume async operations (like db writes) will work; always check
-    xit('sends back the actual created article, not just the POSTed article', function () {
+    xit('sends back JSON of the actual created article, not just the POSTed data', function () {
 
       return agent
       .post('/articles')
@@ -233,7 +269,7 @@ describe('Articles Route:', function () {
       .expect(200)
       .expect(function (res) {
         expect(res.body.article.extraneous).to.be.an('undefined');
-        expect(res.body.article.version).to.equal(0);
+        expect(res.body.article.createdAt).to.exist; // eslint-disable-line no-unused-expressions
       });
 
     });
@@ -241,31 +277,29 @@ describe('Articles Route:', function () {
   });
 
   /**
-   * Series of tests to test updating of Articles using a PUT
+   * Series of specs to test updating of Articles using a PUT
    * request to /articles/:id
    */
   describe('PUT /articles/:id', function () {
 
     var article;
 
-    before(function () {
+    beforeEach(function () {
 
-      return Article.findOne({
-        where: {
-          title: 'Awesome POST-Created Article'
-        }
+      return Article.create({
+        title: 'Final Article',
+        content: 'You can do it!'
       })
-      .then(function (_article) {
-        article = _article;
-      })
-      .catch(function(err) { console.error(err.message); });
+      .then(function (createdArticle) {
+        article = createdArticle;
+      });
 
     });
 
     /**
      * Test the updating of an article
      * Here we don't get back just the article, we get back a Object
-     * of this type:
+     * of this type, which you construct manually:
      *
      * {
      *   message: 'Updated successfully'
@@ -288,14 +322,22 @@ describe('Articles Route:', function () {
         expect(res.body.message).to.equal('Updated successfully');
         expect(res.body.article.id).to.not.be.an('undefined');
         expect(res.body.article.title).to.equal('Awesome PUT-Updated Article');
-        expect(res.body.article.content).to.equal('Can you believe I did this in a test?');
+        expect(res.body.article.content).to.equal('You can do it!');
       });
 
     });
 
     xit('saves updates to the DB', function () {
 
-      return Article.findById(article.id).then(function (foundArticle) {
+      return agent
+      .put('/articles/' + article.id)
+      .send({
+        title: 'Awesome PUT-Updated Article'
+      })
+      .then(function () {
+        return Article.findById(article.id);
+      })
+      .then(function (foundArticle) {
         expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
         expect(foundArticle.title).to.equal('Awesome PUT-Updated Article');
       });

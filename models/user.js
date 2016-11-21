@@ -8,4 +8,3 @@ var User = db.define('User', {
 });
 
 module.exports = User;
-

@@ -9,7 +9,7 @@ var User = require('./user');
 
 //---------VVVV---------  your code below  ---------VVV----------
 
-var Article = db.define('Article', {
+var Article = db.define('article', {
 
 
 });

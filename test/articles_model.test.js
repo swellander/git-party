@@ -1,5 +1,6 @@
 'use strict';
 
+var Promise = require('bluebird');
 var expect = require('chai').expect;
 var Article = require('../models/article');
 var User = require('../models/user');
@@ -206,7 +207,8 @@ describe('The `Article` model', function () {
             content: 'etc.'
           });
         });
-        return Promise.all([...otherArticles, article.save()]);
+        var articles = otherArticles.concat(article.save());
+        return Promise.all(articles);
       });
 
       xit('finds one specific article by its `title`', function () {
@@ -241,7 +243,7 @@ describe('The `Article` model', function () {
       });
 
       return Promise.all([creatingUser, creatingArticle])
-      .then(function([createdUser, createdArticle]) {
+      .spread(function(createdUser, createdArticle) {
         // this method `setAuthor` method automatically exists if you set up the association correctly
         return createdArticle.setAuthor(createdUser);
       })

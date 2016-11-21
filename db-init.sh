@@ -1,22 +1,15 @@
 #!/bin/sh
 
 # PostgreSQL does not supoort "IF NOT EXISTS" for db creation
-# So we use a shell script to dynamically accomplish this
+# So we use a shell script to dynamically accomplish this.
 
-conditionalPsqlCreate () {
-  testQuery=$1 thingToCreate=$2 tryMessage=$3
-  echo $tryMessage
-  if [ $(psql -tAc "SELECT 1 FROM $testQuery") ]; then
-    echo "already exists"
-  else
-    psql -c "CREATE $thingToCreate"
-  fi
-}
+# Usage: ./db-init.sh your_new_database_name
 
-# create database
-
-database="checkpoint_express_sequelize"
-conditionalPsqlCreate \
-"pg_database WHERE datname = '$database'" \
-"DATABASE $database" \
-"creating database $database"
+datname=$1
+echo "creating database $datname"
+query=$(psql -tAc "SELECT datname FROM pg_database WHERE datname = '$datname'")
+if echo "$query" | grep -q "$datname"; then
+  echo "already exists"
+else
+  psql -c "CREATE DATABASE $datname"
+fi

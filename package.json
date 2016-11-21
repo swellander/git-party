@@ -6,7 +6,7 @@
     "start": "nodemon ./bin/www",
     "test": "nodemon --exec 'mocha --reporter spec --timeout 1000 test/*.test.js || true'",
     "grade": "mocha --reporter spec --timeout 1000 test/*.js",
-    "db-init": "./db-init.sh",
+    "db-init": "./db-init.sh checkpoint_express_sequelize",
     "postinstall": "npm run db-init"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 var express = require('express');
-var morgan = require('morgan');
+var volleyball = require('volleyball');
 var bodyParser = require('body-parser');
 var chalk = require('chalk');
 var path = require('path');
@@ -8,7 +8,7 @@ var routes = require('./routes');
 
 var app = express();
 
-app.use(morgan('      :method :url :status'));
+app.use(volleyball);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));

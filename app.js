@@ -21,9 +21,10 @@ app.use(function (err, req, res, next) {
   var cleanTrace = err.stack
   .split('\n')
   .filter(line => {
-    var notNodeInternal = line.indexOf(__dirname) > -1;
-    var notNodeModule = line.indexOf('node_modules') === -1;
-    return notNodeInternal && notNodeModule;
+    // comment out the next two lines for full (verbose) stack traces
+    var projectFile = line.indexOf(__dirname) > -1; // omit built-in Node code
+    var nodeModule = line.indexOf('node_modules') > -1; // omit npm modules
+    return projectFile && !nodeModule;
   })
   .join('\n');
   // colorize and format the output

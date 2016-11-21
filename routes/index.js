@@ -10,9 +10,8 @@ var Article = require('../models/article');
  \__ \ | |/ _ \|   / | |   | __ | _||   / _|
  |___/ |_/_/ \_\_|_\ |_|   |_||_|___|_|_\___|
  *
- * 
+ *
  */
-
 
 
 module.exports = router;

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "DEBUG=app nodemon ./bin/www",
     "test": "nodemon --exec 'mocha --reporter spec --timeout 1000 test/*.test.js || true'",
     "grade": "mocha --reporter spec --timeout 1000 test/*.js",
     "pg-init": "pg-init checkpoint_express_sequelize",

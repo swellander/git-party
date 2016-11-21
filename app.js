@@ -17,6 +17,8 @@ app.use('/', routes);
 
 // custom error handling
 app.use(function (err, req, res, next) {
+  // just in case
+  if (!err.stack || !err.message) next(err);
   // clean up the trace to just relevant info
   var cleanTrace = err.stack
   .split('\n')

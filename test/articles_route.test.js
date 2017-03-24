@@ -191,19 +191,13 @@ describe('Articles Route:', function () {
    */
   describe('POST /articles', function () {
 
-    /**
-     * Test the creation of an article
-     * Here we don't get back just the article, we get back a Object
-     * of this type, which you construct manually:
+    /*
+     * Here we don't get back just the article, we get back an object of this type, which you construct:
+     *  {
+     *    message: 'Created successfully',
+     *    article: <the created article instance>
+     *  }
      *
-     * {
-     *   message: 'Created successfully'
-     *   article: {
-     *     id: ...
-     *     title: ...
-     *     content: ...
-     *   }
-     * }
      */
     xit('creates a new article', function () {
 
@@ -298,18 +292,13 @@ describe('Articles Route:', function () {
 
     /**
      * Test the updating of an article
-     * Here we don't get back just the article, we get back a Object
-     * of this type, which you construct manually:
+     * Here we don't get back just the article, we get back an object of this type, which you construct:
+     *  {
+     *    message: 'Updated successfully',
+     *    article: <the created article instance>
+     *  }
      *
-     * {
-     *   message: 'Updated successfully'
-     *   article: {
-     *     id: ...
-     *     title: ...
-     *     content: ...
-     *   }
-     * }
-     */
+     **/
     xit('updates an article', function () {
 
       return agent

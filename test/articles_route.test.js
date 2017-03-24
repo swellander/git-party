@@ -191,7 +191,8 @@ describe('Articles Route:', function () {
    */
   describe('POST /articles', function () {
 
-    /*
+    /**
+     * Test the creation of an article
      * Here we don't get back just the article, we get back an object of this type, which you construct:
      *  {
      *    message: 'Created successfully',
@@ -295,7 +296,7 @@ describe('Articles Route:', function () {
      * Here we don't get back just the article, we get back an object of this type, which you construct:
      *  {
      *    message: 'Updated successfully',
-     *    article: <the created article instance>
+     *    article: <the updated article instance>
      *  }
      *
      **/

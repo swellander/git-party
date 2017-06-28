@@ -304,6 +304,14 @@ describe('The `Article` model', function () {
       })
       .then(function(updatedArticle) {
         expect(updatedArticle.version).to.equal(2);
+
+        // "reload" the article from the database,
+        // just to make sure that the changes to the version
+        // are saved properly!
+        return updatedArticle.reload();
+      })
+      .then(function (reloadedArticle) {
+        expect(reloadedArticle.version).to.equal(2);
       });
 
     });

@@ -63,24 +63,29 @@ describe('The `Article` model', function () {
 
     });
 
-    xit('requires `content`', function () {
+    it('requires `content`', function () {
 
       article.content = null;
 
       return article.validate()
-      .then(function(result) {
+      .then(function () {
+        throw new Error('validation should fail when content is null');
+      },
+      function(result) {
         expect(result).to.be.an.instanceOf(Error);
-        expect(result.message).to.contain('content cannot be null');
       });
 
     });
 
-    xit('requires `title` (in a more strict way than for `content`)', function () {
+    it('requires `title` (in a more strict way than for `content`)', function () {
 
       article.title = '';
 
       return article.validate()
-      .then(function (result) {
+      .then(function () {
+        throw new Error('validation should fail when content is empty');
+      },
+      function (result) {
         expect(result).to.be.an.instanceOf(Error);
         expect(result.message).to.contain('Validation error');
       });

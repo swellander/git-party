@@ -51,7 +51,7 @@ describe('The `Article` model', function () {
     /**
      * Your model should have two fields (both required): `title` and `content`.
      *
-     * http://sequelize.readthedocs.io/en/v3/docs/models-definition/
+     * http://docs.sequelizejs.com/manual/tutorial/models-definition.html
      */
     it('includes `title` and `content` fields', function () {
 
@@ -63,7 +63,7 @@ describe('The `Article` model', function () {
 
     });
 
-    it('requires `content`', function () {
+    xit('requires `content`', function () {
 
       article.content = null;
 
@@ -77,7 +77,7 @@ describe('The `Article` model', function () {
 
     });
 
-    it('requires `title` (in a more strict way than for `content`)', function () {
+    xit('requires `title` (in a more strict way than for `content`)', function () {
 
       article.title = '';
 
@@ -126,7 +126,7 @@ describe('The `Article` model', function () {
        * Set up a virtual field (check out sequelize getter methods) called `snippet`
        * that returns the first 23 characters of the content followed by "...".
        *
-       * http://sequelize.readthedocs.io/en/v3/docs/models-definition/#defining-as-part-of-the-model-options
+       * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#defining-as-part-of-the-model-options
        */
       xit('evaluates to the first 23 characters of the `content` appended with "..."', function () {
 
@@ -159,7 +159,7 @@ describe('The `Article` model', function () {
        * This method does not save to the backend, it just modifies the Sequelize
        * object so the user can choose if and when to actually save.
        *
-       * http://sequelize.readthedocs.io/en/v3/docs/models-definition/#expansion-of-models
+       * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#expansion-of-models
        */
       xit('truncates the `content`', function () {
 
@@ -202,7 +202,7 @@ describe('The `Article` model', function () {
        * Set up a class method called `findByTitle` that's a convenience
        * method to find a *single* document by its title.
        *
-       * http://sequelize.readthedocs.io/en/v3/docs/models-definition/#expansion-of-models
+       * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#expansion-of-models
        */
 
       beforeEach(function(){
@@ -236,7 +236,7 @@ describe('The `Article` model', function () {
      * Add a `belongsTo` relationship between articles and users,
      * but make sure the user is aliased as `author` for each article.
      *
-     * http://sequelize.readthedocs.io/en/v3/docs/associations/#belongsto
+     * http://docs.sequelizejs.com/manual/tutorial/associations.html#belongsto
      */
 
     xit("belongs to a user, who is stored as the article's `author`", function() {
@@ -271,7 +271,7 @@ describe('The `Article` model', function () {
    * Your model should have a field called `version`,
    * which increases by 1 every time you save
    *
-   * http://sequelize.readthedocs.io/en/v3/docs/hooks/
+   * http://docs.sequelizejs.com/manual/tutorial/hooks.html
    */
 
   describe('`version` field', function() {
@@ -330,7 +330,7 @@ describe('The `Article` model', function () {
      * access it, we should get one string: the tags joined by a comma and space
      *
      * Look at getters and setters:
-     * http://sequelize.readthedocs.io/en/v3/docs/models-definition/#getters-setters
+     * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#getters-setters
      *
      * To activate this spec, change `xit` to `it`
      */

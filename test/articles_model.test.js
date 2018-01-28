@@ -1,7 +1,12 @@
 'use strict';
 
 var Promise = require('bluebird');
-var expect = require('chai').expect;
+var chai = require('chai');
+var expect = chai.expect;
+var sinon = require('sinon');
+var sinonChai = require('sinon-chai');
+chai.use(sinonChai)
+
 var Article = require('../models/article');
 var User = require('../models/user');
 var db = require('../models/database');
@@ -153,6 +158,18 @@ describe('The `Article` model', function () {
 
     describe('`truncate` instance method', function(){
 
+      beforeEach(() => {
+        sinon.spy(article, 'update')
+        sinon.spy(article, 'save')
+        sinon.spy(Article, 'update')
+      });
+
+      afterEach(() => {
+        article.update.restore()
+        article.save.restore()
+        Article.update.restore()
+      });
+
       /**
        * Set up an instance method (check out sequelize instanceMethods) called `truncate`
        * that will shorten (change!) the article instance content to a passed-in length.
@@ -187,7 +204,16 @@ describe('The `Article` model', function () {
         article.truncate(7);
         expect(article.content).to.have.length(7);
 
-        return Article.findAll()
+        // we are *not* asking you to change the row in the db!
+        /* eslint-disable no-unused-expressions */
+        expect(article.update).not.to.have.been.called;
+        expect(article.save).not.to.have.been.called;
+        expect(Article.update).not.to.have.been.called;
+        /* eslint-enable no-unused-expressions */
+
+        // seriously don't do it
+        return Promise.delay(100)
+        .then(() => Article.findAll())
         .then(function(articles) {
           expect(articles).to.have.length(0);
         });

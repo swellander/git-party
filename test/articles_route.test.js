@@ -2,7 +2,7 @@
 
 
 var expect = require('chai').expect;
-var request = require('supertest-as-promised');
+var request = require('supertest');
 
 var app = require('../app');
 var agent = request.agent(app);

@@ -1,15 +1,15 @@
 'use strict';
 
 
-var expect = require('chai').expect;
-var request = require('supertest');
+const expect = require('chai').expect;
+const request = require('supertest');
 
-var app = require('../server/app');
-var agent = request.agent(app);
+const app = require('../server/app');
+const agent = request.agent(app);
 
-var db = require('../server/models/database');
-var Article = require('../server/models/article');
-var User = require('../server/models/user');
+const db = require('../server/models/database');
+const Article = require('../server/models/article');
+const User = require('../server/models/user');
 
 /**
  *
@@ -70,7 +70,7 @@ describe('Articles Route:', function () {
      */
     xit('returns an article if there is one in the DB', function () {
 
-      var article = Article.build({
+      let article = Article.build({
         title: 'Test Article',
         content: 'Test body'
       });
@@ -97,12 +97,12 @@ describe('Articles Route:', function () {
      */
     xit('returns another article if there is one in the DB', function () {
 
-      var article1 = Article.build({
+      let article1 = Article.build({
         title: 'Test Article',
         content: 'Test body'
       });
 
-      var article2 = Article.build({
+      let article2 = Article.build({
         title: 'Another Test Article',
         content: 'Another test body'
       });
@@ -131,11 +131,11 @@ describe('Articles Route:', function () {
    */
   describe('GET /articles/:id', function () {
 
-    var coolArticle;
+    let coolArticle;
 
     beforeEach(function () {
 
-      var creatingArticles = [{
+      let creatingArticles = [{
         title: 'Boring article',
         content: 'This article is boring'
       }, {
@@ -277,7 +277,7 @@ describe('Articles Route:', function () {
    */
   describe('PUT /articles/:id', function () {
 
-    var article;
+    let article;
 
     beforeEach(function () {
 

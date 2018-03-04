@@ -1,14 +1,14 @@
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon');
-var sinonChai = require('sinon-chai');
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 chai.use(sinonChai)
 
-var Article = require('../server/models/article');
-var User = require('../server/models/user');
-var db = require('../server/models/database');
+const Article = require('../server/models/article');
+const User = require('../server/models/user');
+const db = require('../server/models/database');
 
 /**
  *
@@ -30,9 +30,9 @@ describe('The `Article` model', function () {
   /**
    * Next, we create an (un-saved!) article instance before every spec
    */
-  var fullText = 'The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family.';
+  let fullText = 'The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family.';
 
-  var article;
+  let article;
   beforeEach(function(){
     article = Article.build({
       title: 'Migratory Birds',
@@ -98,7 +98,7 @@ describe('The `Article` model', function () {
 
     xit('can handle long `content`', function() {
 
-      var articleContent = 'WALL-E (stylized with an interpunct as WALL·E) is a 2008 American computer-animated science-fiction comedy film produced by Pixar Animation Studios and released by Walt Disney Pictures. Directed by Andrew Stanton, the story follows a robot named WALL-E, who is designed to clean up an abandoned, waste-covered Earth far in the future. He falls in love with another robot named EVE, who also has a programmed task, and follows her into outer space on an adventure that changes the destiny of both his kind and humanity. Both robots exhibit an appearance of free will and emotions similar to humans, which develop further as the film progresses.';
+      let articleContent = 'WALL-E (stylized with an interpunct as WALL·E) is a 2008 American computer-animated science-fiction comedy film produced by Pixar Animation Studios and released by Walt Disney Pictures. Directed by Andrew Stanton, the story follows a robot named WALL-E, who is designed to clean up an abandoned, waste-covered Earth far in the future. He falls in love with another robot named EVE, who also has a programmed task, and follows her into outer space on an adventure that changes the destiny of both his kind and humanity. Both robots exhibit an appearance of free will and emotions similar to humans, which develop further as the film progresses.';
 
       return Article.create({
         title: 'WALL-E',
@@ -190,7 +190,7 @@ describe('The `Article` model', function () {
 
         expect(article.content).to.equal(fullText);
 
-        var randLength = Math.ceil(Math.random() * 20);
+        let randLength = Math.ceil(Math.random() * 20);
         article.truncate(randLength);
         expect(article.content).to.have.length(randLength);
 
@@ -233,13 +233,13 @@ describe('The `Article` model', function () {
        */
 
       beforeEach(function(){
-        var otherArticles = [1, 2, 3].map(function (num) {
+        let otherArticles = [1, 2, 3].map(function (num) {
           return Article.create({
             title: 'Article Number ' + num,
             content: 'etc.'
           });
         });
-        var articles = otherArticles.concat(article.save());
+        let articles = otherArticles.concat(article.save());
         return Promise.all(articles);
       });
 
@@ -268,8 +268,8 @@ describe('The `Article` model', function () {
 
     xit("belongs to a user, who is stored as the article's `author`", function() {
 
-      var creatingUser = User.create({ name: 'Alatar the Blue'});
-      var creatingArticle = Article.create({
+      let creatingUser = User.create({ name: 'Alatar the Blue'});
+      let creatingArticle = Article.create({
         title: 'Blue Wizards',
         content: 'They are two of the five Wizards (or Istari) sent by the Valar to Middle-earth to aid in the struggle against Sauron.'
       });

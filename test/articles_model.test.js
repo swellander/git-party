@@ -1,15 +1,14 @@
 'use strict';
 
-var Promise = require('bluebird');
 var chai = require('chai');
 var expect = chai.expect;
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 chai.use(sinonChai)
 
-var Article = require('../models/article');
-var User = require('../models/user');
-var db = require('../models/database');
+var Article = require('../server/models/article');
+var User = require('../server/models/user');
+var db = require('../server/models/database');
 
 /**
  *
@@ -197,7 +196,7 @@ describe('The `Article` model', function () {
 
       });
 
-      xit('does not save the instance once truncated', function() {
+      xit('does not save the instance once truncated', function(done) {
 
         expect(article.content).to.equal(fullText);
 
@@ -212,11 +211,13 @@ describe('The `Article` model', function () {
         /* eslint-enable no-unused-expressions */
 
         // seriously don't do it
-        return Promise.delay(100)
-        .then(() => Article.findAll())
-        .then(function(articles) {
-          expect(articles).to.have.length(0);
-        });
+        setTimeout(() => {
+          Article.findAll()
+          .then(function(articles) {
+            expect(articles).to.have.length(0);
+            done();
+          });
+        }, 100);
 
       });
 

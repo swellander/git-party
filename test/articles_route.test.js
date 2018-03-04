@@ -4,12 +4,12 @@
 var expect = require('chai').expect;
 var request = require('supertest');
 
-var app = require('../app');
+var app = require('../server/app');
 var agent = request.agent(app);
 
-var db = require('../models/database');
-var Article = require('../models/article');
-var User = require('../models/user');
+var db = require('../server/models/database');
+var Article = require('../server/models/article');
+var User = require('../server/models/user');
 
 /**
  *

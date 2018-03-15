@@ -7,3 +7,5 @@ Makefile
 .idea
 **.solution.js
 .jshintrc
+bundle.js
+bundle.map.js

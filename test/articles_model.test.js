@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird')
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
@@ -123,37 +124,6 @@ describe('The `Article` model', () => {
  */
 
   describe('options definition', () => {
-
-    describe('`snippet` virtual field', () => {
-
-      /**
-       * Set up a virtual field (check out sequelize getter methods) called `snippet`
-       * that returns the first 23 characters of the content followed by "...".
-       *
-       * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#defining-as-part-of-the-model-options
-       */
-      xit('evaluates to the first 23 characters of the `content` appended with "..."', () => {
-
-        expect(article.snippet).to.equal('The South African cliff...');
-
-        article.content = 'At length did cross an Albatross / Thorough the fog it came';
-        expect(article.snippet).to.equal('At length did cross an ...');
-
-        article.content = 'The Albatross fell off, and sank / Like lead into the sea';
-        expect(article.snippet).to.equal('The Albatross fell off,...');
-
-      });
-
-      // This is mostly to avoid a corner case seen during `Model.update`.
-      xit('returns empty string for missing `content`', () => {
-
-        article.content = undefined;
-
-        expect(article.snippet).to.equal('');
-
-      });
-
-    });
 
     describe('`truncate` instance method', () => {
 

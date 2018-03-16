@@ -239,7 +239,7 @@ describe('Articles Route:', () => {
         content: 'Can you believe I did this in a test?'
       })
       .expect(200)
-        .then(() => {
+      .then(() => {
         return Article.findOne({
           where: { title: 'Awesome POST-Created Article' }
         });

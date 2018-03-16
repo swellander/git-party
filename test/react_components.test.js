@@ -1,7 +1,7 @@
 import React from "react";
 import { expect } from "chai";
 import { spy } from "sinon";
-import Enzyme from "enzyme";
+import Enzyme, {shallow} from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -33,12 +33,12 @@ describe("React components", () => {
     // "trivial" way, but look five or so specs down for a twist…
 
     xit("includes the article's title as an h1", () => {
-      expect(articleWrapper.find("h1")).to.have.html("<h1>Migratory Birds</h1>");
+      expect(articleWrapper.find("h1").text().trim()).to.be.equal("Migratory Birds");
     });
 
     xit("includes the article's content as paragraph", () => {
-      expect(articleWrapper.find("p")).to.have.html(
-        "<p>The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family.</p>"
+      expect(articleWrapper.find("p").text().trim()).to.be.equal(
+        "The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family."
       );
     });
 
@@ -56,9 +56,9 @@ describe("React components", () => {
       };
       // we make a new component with this different data, and check its contents
       const differentarticleWrapper = shallow(<Article fullArticle={aDifferentArticle} />);
-      expect(differentarticleWrapper.find("h1")).to.have.html("<h1>Blue Wizards</h1>");
-      expect(differentarticleWrapper.find("p")).to.have.html(
-        "<p>They are two of the five Wizards (or Istari) sent by the Valar to Middle-earth to aid in the struggle against Sauron.</p>"
+      expect(differentarticleWrapper.find("h1").text().trim()).to.be.equal("Blue Wizards");
+      expect(differentarticleWrapper.find("p").text().trim()).to.be.equal(
+        "They are two of the five Wizards (or Istari) sent by the Valar to Middle-earth to aid in the struggle against Sauron."
       );
     });
   });
@@ -69,16 +69,19 @@ describe("React components", () => {
 
     const articleList = [
       {
+        id: 1,
         title: "Migratory Birds",
         content:
           "The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family."
       },
       {
+        id: 2,
         title: "Blue Wizards",
         content:
           "They are two of the five Wizards (or Istari) sent by the Valar to Middle-earth to aid in the struggle against Sauron."
       },
       {
+        id: 3,
         title: "Loren Ipsum",
         content:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."

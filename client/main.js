@@ -4,9 +4,9 @@ This file is NOT necessary to edit for the test specs
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Articles from './components/Articles';
+import ArticleList from './components/ArticleList';
 
 ReactDOM.render(
-    <Articles/>,
+    <ArticleList />,
     document.getElementById('app')
 );

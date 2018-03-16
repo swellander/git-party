@@ -18,26 +18,26 @@ const User = require('../server/models/user');
  * Do these after you finish the Article Model tests
  *
  */
-describe('Articles Route:', function () {
+describe('Articles Route:', () => {
 
   /**
    * First we clear the database before beginning each run
    */
-  before(function () {
+  before(() => {
     return db.sync({force: true});
   });
 
   /**
    * Also, we empty the tables after each spec
    */
-  afterEach(function () {
+  afterEach(() => {
     return Promise.all([
       Article.truncate({ cascade: true }),
       User.truncate({ cascade: true })
     ]);
   });
 
-  describe('GET /articles', function () {
+  describe('GET /articles', () => {
     /**
      * Problem 1
      * We'll run a GET request to /articles
@@ -48,13 +48,13 @@ describe('Articles Route:', function () {
      * **Extra Credit**: Consider using app.param to automatically load
      * in the Article whenever a param :id is detected
      */
-    xit('responds with an array via JSON', function () {
+    xit('responds with an array via JSON', () => {
 
       return agent
       .get('/articles')
       .expect('Content-Type', /json/)
       .expect(200)
-      .expect(function (res) {
+      .expect((res) => {
         // res.body is the JSON return object
         expect(res.body).to.be.an.instanceOf(Array);
         expect(res.body).to.have.length(0);
@@ -68,19 +68,19 @@ describe('Articles Route:', function () {
      * using the GET /articles route
      *
      */
-    xit('returns an article if there is one in the DB', function () {
+    xit('returns an article if there is one in the DB', () => {
 
       let article = Article.build({
         title: 'Test Article',
         content: 'Test body'
       });
 
-      return article.save().then(function () {
+      return article.save().then(() => {
 
         return agent
         .get('/articles')
         .expect(200)
-        .expect(function (res) {
+        .expect((res) => {
           expect(res.body).to.be.an.instanceOf(Array);
           expect(res.body[0].content).to.equal('Test body');
         });
@@ -95,7 +95,7 @@ describe('Articles Route:', function () {
      * using the GET /articles route
      *
      */
-    xit('returns another article if there is one in the DB', function () {
+    xit('returns another article if there is one in the DB', () => {
 
       let article1 = Article.build({
         title: 'Test Article',
@@ -108,17 +108,17 @@ describe('Articles Route:', function () {
       });
 
       return article1.save()
-      .then(function () { return article2.save() })
-      .then(function () {
+        .then(() => { return article2.save() })
+        .then(() => {
 
         return agent
-        .get('/articles')
-        .expect(200)
-        .expect(function (res) {
-          expect(res.body).to.be.an.instanceOf(Array);
-          expect(res.body[0].content).to.equal('Test body');
-          expect(res.body[1].content).to.equal('Another test body');
-        });
+          .get('/articles')
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).to.be.an.instanceOf(Array);
+            expect(res.body[0].content).to.equal('Test body');
+            expect(res.body[1].content).to.equal('Another test body');
+          });
 
       });
 
@@ -129,11 +129,11 @@ describe('Articles Route:', function () {
   /**
    * Search for articles by ID
    */
-  describe('GET /articles/:id', function () {
+  describe('GET /articles/:id', () => {
 
     let coolArticle;
 
-    beforeEach(function () {
+    beforeEach(() => {
 
       let creatingArticles = [{
         title: 'Boring article',
@@ -158,12 +158,12 @@ describe('Articles Route:', function () {
      * This is a proper GET /articles/ID request
      * where we search by the ID of the article created above
      */
-    xit('returns the JSON of the article based on the id', function () {
+    xit('returns the JSON of the article based on the id', () => {
 
       return agent
       .get('/articles/' + coolArticle.id)
       .expect(200)
-      .expect(function (res) {
+      .expect((res) => {
         if (typeof res.body === 'string') {
           res.body = JSON.parse(res.body);
         }
@@ -175,7 +175,7 @@ describe('Articles Route:', function () {
     /**
      * Here we pass in a bad ID to the URL, we should get a 404 error
      */
-    xit('returns a 404 error if the ID is not correct', function () {
+    xit('returns a 404 error if the ID is not correct', () => {
 
       return agent
       .get('/articles/76142896')
@@ -189,7 +189,7 @@ describe('Articles Route:', function () {
    * Series of tests to test creation of new Articles using a POST
    * request to /articles
    */
-  describe('POST /articles', function () {
+  describe('POST /articles', () => {
 
     /**
      * Test the creation of an article
@@ -200,7 +200,7 @@ describe('Articles Route:', function () {
      *  }
      *
      */
-    xit('creates a new article', function () {
+    xit('creates a new article', () => {
 
       return agent
       .post('/articles')
@@ -209,7 +209,7 @@ describe('Articles Route:', function () {
         content: 'Can you believe I did this in a test?'
       })
       .expect(200)
-      .expect(function (res) {
+      .expect((res) => {
         expect(res.body.message).to.equal('Created successfully');
         expect(res.body.article.id).to.not.be.an('undefined');
         expect(res.body.article.title).to.equal('Awesome POST-Created Article');
@@ -218,7 +218,7 @@ describe('Articles Route:', function () {
     });
 
     // This one should fail with a 500 because we don't set the article.content
-    xit('does not create a new article without content', function () {
+    xit('does not create a new article without content', () => {
 
       return agent
       .post('/articles')
@@ -230,7 +230,7 @@ describe('Articles Route:', function () {
     });
 
     // Check if the articles were actually saved to the database
-    xit('saves the article to the DB', function () {
+    xit('saves the article to the DB', () => {
 
       return agent
       .post('/articles')
@@ -239,12 +239,12 @@ describe('Articles Route:', function () {
         content: 'Can you believe I did this in a test?'
       })
       .expect(200)
-      .then(function () {
+        .then(() => {
         return Article.findOne({
           where: { title: 'Awesome POST-Created Article' }
         });
       })
-      .then(function (foundArticle) {
+      .then((foundArticle) => {
         expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
         expect(foundArticle.content).to.equal('Can you believe I did this in a test?');
       });
@@ -252,7 +252,7 @@ describe('Articles Route:', function () {
     });
 
     // Do not assume async operations (like db writes) will work; always check
-    xit('sends back JSON of the actual created article, not just the POSTed data', function () {
+    xit('sends back JSON of the actual created article, not just the POSTed data', () => {
 
       return agent
       .post('/articles')
@@ -262,7 +262,7 @@ describe('Articles Route:', function () {
         extraneous: 'Sequelize will quietly ignore this non-schema property'
       })
       .expect(200)
-      .expect(function (res) {
+      .expect((res) => {
         expect(res.body.article.extraneous).to.be.an('undefined');
         expect(res.body.article.createdAt).to.exist; // eslint-disable-line no-unused-expressions
       });
@@ -275,17 +275,17 @@ describe('Articles Route:', function () {
    * Series of specs to test updating of Articles using a PUT
    * request to /articles/:id
    */
-  describe('PUT /articles/:id', function () {
+  describe('PUT /articles/:id', () => {
 
     let article;
 
-    beforeEach(function () {
+    beforeEach(() => {
 
       return Article.create({
         title: 'Final Article',
         content: 'You can do it!'
       })
-      .then(function (createdArticle) {
+        .then((createdArticle) => {
         article = createdArticle;
       });
 
@@ -300,7 +300,7 @@ describe('Articles Route:', function () {
      *  }
      *
      **/
-    xit('updates an article', function () {
+    xit('updates an article', () => {
 
       return agent
       .put('/articles/' + article.id)
@@ -308,7 +308,7 @@ describe('Articles Route:', function () {
         title: 'Awesome PUT-Updated Article'
       })
       .expect(200)
-      .expect(function (res) {
+      .expect((res) => {
         expect(res.body.message).to.equal('Updated successfully');
         expect(res.body.article.id).to.not.be.an('undefined');
         expect(res.body.article.title).to.equal('Awesome PUT-Updated Article');
@@ -317,24 +317,24 @@ describe('Articles Route:', function () {
 
     });
 
-    xit('saves updates to the DB', function () {
+    xit('saves updates to the DB', () => {
 
       return agent
       .put('/articles/' + article.id)
       .send({
         title: 'Awesome PUT-Updated Article'
       })
-      .then(function () {
+      .then(() => {
         return Article.findById(article.id);
       })
-      .then(function (foundArticle) {
+      .then((foundArticle) => {
         expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
         expect(foundArticle.title).to.equal('Awesome PUT-Updated Article');
       });
 
     });
 
-    xit('gets 500 for invalid update', function () {
+    xit('gets 500 for invalid update', () => {
 
       return agent
       .put('/articles/' + article.id)

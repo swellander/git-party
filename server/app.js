@@ -1,12 +1,12 @@
-var express = require('express');
-var morgan = require('morgan');
-var bodyParser = require('body-parser');
-var chalk = require('chalk');
-var path = require('path');
+const express = require('express');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const chalk = require('chalk');
+const path = require('path');
 
-var routes = require('./routes');
+const routes = require('./routes');
 
-var app = express();
+const app = express();
 
 app.use(morgan('      ↓ received :method :url · responded :status :res[Content-Type]'));
 app.use(bodyParser.json());
@@ -16,16 +16,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 // custom error handling
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   // just in case
   if (!err.stack || !err.message) next(err);
   // clean up the trace to just relevant info
-  var cleanTrace = err.stack
+  const cleanTrace = err.stack
   .split('\n')
   .filter(line => {
     // comment out the next two lines for full (verbose) stack traces
-    var projectFile = line.indexOf(__dirname) > -1; // omit built-in Node code
-    var nodeModule = line.indexOf('node_modules') > -1; // omit npm modules
+    const projectFile = line.indexOf(__dirname) > -1; // omit built-in Node code
+    const nodeModule = line.indexOf('node_modules') > -1; // omit npm modules
     return projectFile && !nodeModule;
   })
   .join('\n');

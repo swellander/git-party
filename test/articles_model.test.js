@@ -18,22 +18,22 @@ const db = require('../server/models/database');
  *
  */
 
-describe('The `Article` model', function () {
+describe('The `Article` model', () => {
 
   /**
    * First we clear the database and recreate the tables before beginning a run
    */
-  before(function () {
+  before(() => {
     return db.sync({force: true});
   });
 
   /**
    * Next, we create an (un-saved!) article instance before every spec
    */
-  let fullText = 'The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family.';
+  const fullText = 'The South African cliff swallow (Petrochelidon spilodera), also known as the South African swallow, is a species of bird in the Hirundinidae family.';
 
   let article;
-  beforeEach(function(){
+  beforeEach(() => {
     article = Article.build({
       title: 'Migratory Birds',
       content: fullText
@@ -43,60 +43,60 @@ describe('The `Article` model', function () {
   /**
    * Also, we empty the tables after each spec
    */
-  afterEach(function () {
+  afterEach(() => {
     return Promise.all([
       Article.truncate({ cascade: true }),
       User.truncate({ cascade: true })
     ]);
   });
 
-  describe('attributes definition', function(){
+  describe('attributes definition', () => {
 
     /**
      * Your model should have two fields (both required): `title` and `content`.
      *
      * http://docs.sequelizejs.com/manual/tutorial/models-definition.html
      */
-    it('includes `title` and `content` fields', function () {
+    it('includes `title` and `content` fields', () => {
 
       return article.save()
-      .then(function (savedArticle) {
+      .then((savedArticle) => {
         expect(savedArticle.title).to.equal('Migratory Birds');
         expect(savedArticle.content).to.equal(fullText);
       });
 
     });
 
-    xit('requires `content`', function () {
+    xit('requires `content`', () => {
 
       article.content = null;
 
       return article.validate()
-      .then(function () {
+      .then(() => {
         throw new Error('validation should fail when content is null');
       },
-      function(result) {
+      (result) => {
         expect(result).to.be.an.instanceOf(Error);
       });
 
     });
 
-    xit('requires `title` (in a more strict way than for `content`)', function () {
+    xit('requires `title` (in a more strict way than for `content`)', () => {
 
       article.title = '';
 
       return article.validate()
-      .then(function () {
+      .then(() => {
         throw new Error('validation should fail when content is empty');
       },
-      function (result) {
+      (result) => {
         expect(result).to.be.an.instanceOf(Error);
         expect(result.message).to.contain('Validation error');
       });
 
     });
 
-    xit('can handle long `content`', function() {
+    xit('can handle long `content`', () => {
 
       let articleContent = 'WALL-E (stylized with an interpunct as WALL·E) is a 2008 American computer-animated science-fiction comedy film produced by Pixar Animation Studios and released by Walt Disney Pictures. Directed by Andrew Stanton, the story follows a robot named WALL-E, who is designed to clean up an abandoned, waste-covered Earth far in the future. He falls in love with another robot named EVE, who also has a programmed task, and follows her into outer space on an adventure that changes the destiny of both his kind and humanity. Both robots exhibit an appearance of free will and emotions similar to humans, which develop further as the film progresses.';
 
@@ -104,7 +104,7 @@ describe('The `Article` model', function () {
         title: 'WALL-E',
         content: articleContent
       })
-      .then(function(result) {
+      .then((result) => {
         expect(result).to.be.an('object');
         expect(result.title).to.equal('WALL-E');
         expect(result.content).to.equal(articleContent);
@@ -122,9 +122,9 @@ describe('The `Article` model', function () {
  * Article model in your code below, the Routes will also fail. Make commits!
  */
 
-  describe('options definition', function(){
+  describe('options definition', () => {
 
-    describe('`snippet` virtual field', function(){
+    describe('`snippet` virtual field', () => {
 
       /**
        * Set up a virtual field (check out sequelize getter methods) called `snippet`
@@ -132,7 +132,7 @@ describe('The `Article` model', function () {
        *
        * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#defining-as-part-of-the-model-options
        */
-      xit('evaluates to the first 23 characters of the `content` appended with "..."', function () {
+      xit('evaluates to the first 23 characters of the `content` appended with "..."', () => {
 
         expect(article.snippet).to.equal('The South African cliff...');
 
@@ -145,7 +145,7 @@ describe('The `Article` model', function () {
       });
 
       // This is mostly to avoid a corner case seen during `Model.update`.
-      xit('returns empty string for missing `content`', function(){
+      xit('returns empty string for missing `content`', () => {
 
         article.content = undefined;
 
@@ -155,7 +155,7 @@ describe('The `Article` model', function () {
 
     });
 
-    describe('`truncate` instance method', function(){
+    describe('`truncate` instance method', () => {
 
       beforeEach(() => {
         sinon.spy(article, 'update')
@@ -177,7 +177,7 @@ describe('The `Article` model', function () {
        *
        * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#expansion-of-models
        */
-      xit('truncates the `content`', function () {
+      xit('truncates the `content`', () => {
 
         expect(article.content).to.equal(fullText);
 
@@ -186,7 +186,7 @@ describe('The `Article` model', function () {
 
       });
 
-      xit('accepts any length', function () {
+      xit('accepts any length', () => {
 
         expect(article.content).to.equal(fullText);
 
@@ -196,7 +196,7 @@ describe('The `Article` model', function () {
 
       });
 
-      xit('does not save the instance once truncated', function(done) {
+      xit('does not save the instance once truncated', (done) => {
 
         expect(article.content).to.equal(fullText);
 
@@ -213,7 +213,7 @@ describe('The `Article` model', function () {
         // seriously don't do it
         setTimeout(() => {
           Article.findAll()
-          .then(function(articles) {
+          .then((articles) => {
             expect(articles).to.have.length(0);
             done();
           });
@@ -223,7 +223,7 @@ describe('The `Article` model', function () {
 
     });
 
-    describe('`findByTitle` class method', function(){
+    describe('`findByTitle` class method', () => {
 
       /**
        * Set up a class method called `findByTitle` that's a convenience
@@ -232,8 +232,8 @@ describe('The `Article` model', function () {
        * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#expansion-of-models
        */
 
-      beforeEach(function(){
-        let otherArticles = [1, 2, 3].map(function (num) {
+      beforeEach(() => {
+        let otherArticles = [1, 2, 3].map((num) => {
           return Article.create({
             title: 'Article Number ' + num,
             content: 'etc.'
@@ -243,10 +243,10 @@ describe('The `Article` model', function () {
         return Promise.all(articles);
       });
 
-      xit('finds one specific article by its `title`', function () {
+      xit('finds one specific article by its `title`', () => {
 
         return Article.findByTitle('Migratory Birds')
-        .then(function (foundArticle) {
+        .then((foundArticle) => {
           expect(foundArticle).not.to.be.an.instanceOf(Array);
           expect(foundArticle.content).to.equal(fullText);
         });
@@ -257,7 +257,7 @@ describe('The `Article` model', function () {
 
   });
 
-  describe('associations', function(){
+  describe('associations', () => {
 
     /**
      * Add a `belongsTo` relationship between articles and users,
@@ -266,7 +266,7 @@ describe('The `Article` model', function () {
      * http://docs.sequelizejs.com/manual/tutorial/associations.html#belongsto
      */
 
-    xit("belongs to a user, who is stored as the article's `author`", function() {
+    xit("belongs to a user, who is stored as the article's `author`", () => {
 
       let creatingUser = User.create({ name: 'Alatar the Blue'});
       let creatingArticle = Article.create({
@@ -275,17 +275,17 @@ describe('The `Article` model', function () {
       });
 
       return Promise.all([creatingUser, creatingArticle])
-      .spread(function(createdUser, createdArticle) {
+      .spread((createdUser, createdArticle) => {
         // this method `setAuthor` method automatically exists if you set up the association correctly
         return createdArticle.setAuthor(createdUser);
       })
-      .then(function() {
+      .then(() => {
         return Article.findOne({
           where: { title: 'Blue Wizards' },
           include: { model: User, as: 'author' }
         });
       })
-      .then(function(foundArticle){
+      .then((foundArticle) => {
         expect(foundArticle.author).to.exist; // eslint-disable-line no-unused-expressions
         expect(foundArticle.author.name).to.equal('Alatar the Blue');
       });
@@ -301,40 +301,40 @@ describe('The `Article` model', function () {
    * http://docs.sequelizejs.com/manual/tutorial/hooks.html
    */
 
-  describe('`version` field', function() {
+  describe('`version` field', () => {
 
-    beforeEach(function() {
+    beforeEach(() => {
       return Article.create({
         title: 'Biological Immortality',
         content: 'Biological immortality refers to a stable or decreasing rate of mortality from senescence, thus decoupling it from chronological age.'
       });
     });
 
-    xit('is originally 0, even if not explicitly set', function() {
+    xit('is originally 0, even if not explicitly set', () => {
 
       return Article.findOne({where: {title: 'Biological Immortality'}})
-      .then(function(foundArticle) {
+      .then((foundArticle) => {
         expect(foundArticle.version).to.equal(0);
       });
 
     });
 
-    xit('increments by 1 every time the article is updated', function() {
+    xit('increments by 1 every time the article is updated', () => {
 
       return Article.findOne({where: {title: 'Biological Immortality'}})
-      .then(function(foundArticle) {
+      .then((foundArticle) => {
         expect(foundArticle.version).to.equal(0);
         return foundArticle.update({
           content: 'Biological immortality is a lie!'
         });
       })
-      .then(function(updatedArticle) {
+      .then((updatedArticle) => {
         expect(updatedArticle.version).to.equal(1);
         return updatedArticle.update({
           content: 'Have you seen the 19th century painting of Keanu Reeves?'
         });
       })
-      .then(function(updatedArticle) {
+      .then((updatedArticle) => {
         expect(updatedArticle.version).to.equal(2);
 
         // "reload" the article from the database,
@@ -342,7 +342,7 @@ describe('The `Article` model', function () {
         // are saved properly!
         return updatedArticle.reload();
       })
-      .then(function (reloadedArticle) {
+      .then((reloadedArticle) => {
         expect(reloadedArticle.version).to.equal(2);
       });
 
@@ -350,7 +350,7 @@ describe('The `Article` model', function () {
 
   });
 
-  describe('extra credit `tags` field', function(){
+  describe('extra credit `tags` field', () => {
 
     /** EXTRA CREDIT
      * Your Article model should have a tag field that's an array, but when we
@@ -361,7 +361,7 @@ describe('The `Article` model', function () {
      *
      * To activate this spec, change `xit` to `it`
      */
-    xit('is a custom getter', function () {
+    xit('is a custom getter', () => {
 
       // tags should have a `defaultValue` that is an empty array.
       expect(Article.attributes.tags.defaultValue).to.deep.equal([]);
@@ -372,7 +372,7 @@ describe('The `Article` model', function () {
         content: 'So Taggy',
         tags: ['tag1', 'tag2', 'tag3']
       })
-      .then(function (createdArticle) {
+      .then((createdArticle) => {
         expect(createdArticle.tags).to.equal('tag1, tag2, tag3');
       });
 

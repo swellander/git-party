@@ -16,11 +16,11 @@
     "express": "^4.16.2",
     "fs-misc": "^2.0.0",
     "morgan": "^1.9.0",
-    "pg": "^6.4.1",
+    "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "sequelize": "^4.4.0"
+    "sequelize": "^4.37.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

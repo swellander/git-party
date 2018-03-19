@@ -27,7 +27,7 @@ describe("React components", () => {
       articleWrapper = shallow(<Article fullArticle={articleData} />);
     });
 
-    // These specs are relatively promitive — all we are asking you to
+    // These specs are relatively primitive — all we are asking you to
     // do is to fill in each JSX tag (h1 & p) in the `render`
     // method to match the HTML string shown. You can pass these in a
     // "trivial" way, but look five or so specs down for a twist…
@@ -65,7 +65,7 @@ describe("React components", () => {
 
   describe("ArticleList", () => {
     // Once again, we are making a testable React component. This time,
-    // it's our `Inbox` component.
+    // it's our `ArticleList` component.
 
     const articleList = [
       {
@@ -106,11 +106,11 @@ describe("React components", () => {
     xit("is comprised of <Article /> components based on what gets placed on the state", () => {
       // This will alter the component's *local state* (i.e. `this.state`).
       articleListWrapper.setState({ articles: articleList });
-      // There should now be a bunch of Message components in the output.
+      // There should now be a bunch of Article components in the output.
       expect(articleListWrapper.find(Article)).to.have.length(3);
 
-      // The first message displayed in the inbox should be based off of the
-      // first element in the randomMessages array.
+      // The first article displayed in the list should be based off of the
+      // first element in the articlesList array.
       const firstMessage = articleListWrapper.find(Article).at(0);
       expect(firstMessage.equals(<Article fullArticle={articleList[0]} />)).to.be.true; // eslint-disable-line
     });

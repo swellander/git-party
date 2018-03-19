@@ -104,7 +104,7 @@ describe("React components", () => {
     });
 
     xit("is comprised of <Article /> components based on what gets placed on the state", () => {
-      // This will alter the component's *local state* (i.e. `this.state`).
+      // This will alter the component's state (i.e. `this.state`).
       articleListWrapper.setState({ articles: articleList });
       // There should now be a bunch of Article components in the output.
       expect(articleListWrapper.find(Article)).to.have.length(3);
@@ -114,5 +114,15 @@ describe("React components", () => {
       const firstMessage = articleListWrapper.find(Article).at(0);
       expect(firstMessage.equals(<Article fullArticle={articleList[0]} />)).to.be.true; // eslint-disable-line
     });
+
+    xit("specifies a `key` prop on each <Article />, equal to that article's id", () => {
+      articleListWrapper.setState({ articles: articleList });
+
+      const firstMessage = articleListWrapper.find(Article).at(0);
+      const secondMessage = articleListWrapper.find(Article).at(1);
+      expect(Number(firstMessage.key())).to.be.equal(articleList[0].id);
+      expect(Number(firstMessage.key())).to.be.equal(articleList[1].id);
+    });
+
   });
 });

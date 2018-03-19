@@ -82,6 +82,11 @@ describe('The `Article` model', () => {
 
     });
 
+    /**
+     * You may want a refresher on Sequelize's validate configurations:
+     *
+     * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#validations
+     */
     xit('requires `title` (in a more strict way than for `content`)', () => {
 
       article.title = '';
@@ -97,6 +102,12 @@ describe('The `Article` model', () => {
 
     });
 
+    /**
+     * Some data types allocate more space than others.
+     * You can check out the full list of types here:
+     *
+     * http://docs.sequelizejs.com/variable/index.html#static-variable-DataTypes
+     */
     xit('can handle long `content`', () => {
 
       let articleContent = 'WALL-E (stylized with an interpunct as WALL·E) is a 2008 American computer-animated science-fiction comedy film produced by Pixar Animation Studios and released by Walt Disney Pictures. Directed by Andrew Stanton, the story follows a robot named WALL-E, who is designed to clean up an abandoned, waste-covered Earth far in the future. He falls in love with another robot named EVE, who also has a programmed task, and follows her into outer space on an adventure that changes the destiny of both his kind and humanity. Both robots exhibit an appearance of free will and emotions similar to humans, which develop further as the film progresses.';

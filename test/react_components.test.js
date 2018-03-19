@@ -121,7 +121,7 @@ describe("React components", () => {
       const firstMessage = articleListWrapper.find(Article).at(0);
       const secondMessage = articleListWrapper.find(Article).at(1);
       expect(Number(firstMessage.key())).to.be.equal(articleList[0].id);
-      expect(Number(firstMessage.key())).to.be.equal(articleList[1].id);
+      expect(Number(secondMessage.key())).to.be.equal(articleList[1].id);
     });
 
   });

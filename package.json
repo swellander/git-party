@@ -6,7 +6,7 @@
     "start": "webpack-dev-server",
     "test": "mocha ./test/*.test.js --watch --require babel-polyfill --compilers js:babel-register",
     "grade": "mocha ./test/*.test.js --reporter spec --timeout 1000 --require babel-polyfill --compilers js:babel-register",
-    "db-init": "pg-init checkpoint_express_sequelize",
+    "db-init": "pg-init checkpoint_pillars",
     "postinstall": "npm run db-init"
   },
   "dependencies": {

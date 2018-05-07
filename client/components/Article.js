@@ -3,7 +3,7 @@ import React from 'react';
 
 // exporting the constructor function (dumb component).
 
-export default () => {
+const Article = () => {
 
   return (
     <div>
@@ -12,3 +12,5 @@ export default () => {
     </div>
   );
 }
+
+export default Article

@@ -1,7 +1,7 @@
 import React from 'react';
 import Article from './Article';
 
-export default class extends React.Component {
+class ArticleList extends React.Component {
 
     constructor() {
         super();
@@ -16,3 +16,5 @@ export default class extends React.Component {
     }
 
 }
+
+export default ArticleList

@@ -1,7 +1,7 @@
 # Checkpoint 3 - Pillars (Express/Sequelize/React)
 
 
-This checkpoint is primarily to help us understand how well you've absorbed. It covers the main libraries you will learn in the curriculum: Express, Sequelize and React. Don't stress out that we will be using this checkpoint to judge you in any way except to understand how we can better help you.
+This checkpoint is primarily to help us understand how well you've absorbed the material covered so far. It covers the main libraries you will learn in the curriculum: Express, Sequelize, and React.
 
 To this end — and perhaps it goes without saying — we ask that you don't help each other or cheat.
 
@@ -16,7 +16,7 @@ The following resources **are** allowed:
 
 * Any notes you've taken so far.
 * All the slide decks that we've used in class.
-* Online docs and resources—but do not copy over any code.
+* Online docs and resources — but do not copy over any code.
 
 ## Things we're checking
 
@@ -32,7 +32,7 @@ The following resources **are** allowed:
 * Make sure your Postgres database is running!
 * `npm install`
 * You can run `npm test` which will continuously run the test suite on file saves.
-* Read through the project structure. You'll be working exclusively in `server/models/article.js`, `server/routes/index.js` and `client/components/article.js`, in that order.
+* Read through the project structure. You'll be working exclusively in `server/models/article.js`, `server/routes/index.js`, `client/components/Article.js`, and  `client/components/ArticleList.js`in that order.
 * Start working through the tests in `test/`.  You have to mark them as active (from pending) by changing `xit` to `it`
 * `git commit` often as you make progress on the tests.
 

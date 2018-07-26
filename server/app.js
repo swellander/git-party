@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
 const chalk = require('chalk');
 const path = require('path');
 
@@ -9,8 +8,8 @@ const routes = require('./routes');
 const app = express();
 
 app.use(morgan('      ↓ received :method :url · responded :status :res[Content-Type]'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);

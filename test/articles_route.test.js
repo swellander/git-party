@@ -48,17 +48,16 @@ describe('Articles Route:', () => {
      * **Extra Credit**: Consider using app.param to automatically load
      * in the Article whenever a param :id is detected
      */
-    xit('responds with an array via JSON', () => {
+    xit('responds with an array via JSON', async () => {
 
-      return agent
+      const res = await agent
       .get('/articles')
       .expect('Content-Type', /json/)
-      .expect(200)
-      .expect((res) => {
-        // res.body is the JSON return object
-        expect(res.body).to.be.an.instanceOf(Array);
-        expect(res.body).to.have.length(0);
-      });
+      .expect(200);
+
+      // res.body is the JSON return object
+      expect(res.body).to.be.an.instanceOf(Array);
+      expect(res.body).to.have.length(0);
 
     });
 
@@ -68,24 +67,19 @@ describe('Articles Route:', () => {
      * using the GET /articles route
      *
      */
-    xit('returns an article if there is one in the DB', () => {
+    xit('returns an article if there is one in the DB', async () => {
 
-      let article = Article.build({
+      await Article.create({
         title: 'Test Article',
         content: 'Test body'
       });
 
-      return article.save().then(() => {
+      const res = await agent
+      .get('/articles')
+      .expect(200);
 
-        return agent
-        .get('/articles')
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).to.be.an.instanceOf(Array);
-          expect(res.body[0].content).to.equal('Test body');
-        });
-
-      });
+      expect(res.body).to.be.an.instanceOf(Array);
+      expect(res.body[0].content).to.equal('Test body');
 
     });
 
@@ -95,32 +89,24 @@ describe('Articles Route:', () => {
      * using the GET /articles route
      *
      */
-    xit('returns another article if there is one in the DB', () => {
+    xit('returns another article if there is one in the DB', async () => {
 
-      let article1 = Article.build({
+      await Article.create({
         title: 'Test Article',
         content: 'Test body'
       });
-
-      let article2 = Article.build({
+      await Article.create({
         title: 'Another Test Article',
         content: 'Another test body'
       });
 
-      return article1.save()
-        .then(() => { return article2.save() })
-        .then(() => {
+      const res = await agent
+      .get('/articles')
+      .expect(200);
 
-        return agent
-          .get('/articles')
-          .expect(200)
-          .expect((res) => {
-            expect(res.body).to.be.an.instanceOf(Array);
-            expect(res.body[0].content).to.equal('Test body');
-            expect(res.body[1].content).to.equal('Another test body');
-          });
-
-      });
+      expect(res.body).to.be.an.instanceOf(Array);
+      expect(res.body[0].content).to.equal('Test body');
+      expect(res.body[1].content).to.equal('Another test body');
 
     });
 
@@ -133,9 +119,9 @@ describe('Articles Route:', () => {
 
     let coolArticle;
 
-    beforeEach(() => {
+    beforeEach(async () => {
 
-      let creatingArticles = [{
+      const creatingArticles = [{
         title: 'Boring article',
         content: 'This article is boring'
       }, {
@@ -147,10 +133,8 @@ describe('Articles Route:', () => {
       }]
       .map(data => Article.create(data));
 
-      return Promise.all(creatingArticles)
-      .then(createdArticles => {
-        coolArticle = createdArticles[1];
-      });
+      const createdArticles = await Promise.all(creatingArticles);
+      coolArticle = createdArticles[1];
 
     });
 
@@ -158,17 +142,16 @@ describe('Articles Route:', () => {
      * This is a proper GET /articles/ID request
      * where we search by the ID of the article created above
      */
-    xit('returns the JSON of the article based on the id', () => {
+    xit('returns the JSON of the article based on the id', async () => {
 
-      return agent
+      const res = await agent
       .get('/articles/' + coolArticle.id)
-      .expect(200)
-      .expect((res) => {
-        if (typeof res.body === 'string') {
-          res.body = JSON.parse(res.body);
-        }
-        expect(res.body.title).to.equal('Cool Article');
-      });
+      .expect(200);
+
+      if (typeof res.body === 'string') {
+        res.body = JSON.parse(res.body);
+      }
+      expect(res.body.title).to.equal('Cool Article');
 
     });
 
@@ -200,20 +183,19 @@ describe('Articles Route:', () => {
      *  }
      *
      */
-    xit('creates a new article', () => {
+    xit('creates a new article', async () => {
 
-      return agent
+      const res = await agent
       .post('/articles')
       .send({
         title: 'Awesome POST-Created Article',
         content: 'Can you believe I did this in a test?'
       })
-      .expect(200)
-      .expect((res) => {
-        expect(res.body.message).to.equal('Created successfully');
-        expect(res.body.article.id).to.not.be.an('undefined');
-        expect(res.body.article.title).to.equal('Awesome POST-Created Article');
-      });
+      .expect(200);
+
+      expect(res.body.message).to.equal('Created successfully');
+      expect(res.body.article.id).to.not.be.an('undefined');
+      expect(res.body.article.title).to.equal('Awesome POST-Created Article');
 
     });
 
@@ -230,42 +212,39 @@ describe('Articles Route:', () => {
     });
 
     // Check if the articles were actually saved to the database
-    xit('saves the article to the DB', () => {
+    xit('saves the article to the DB', async () => {
 
-      return agent
+      await agent
       .post('/articles')
       .send({
         title: 'Awesome POST-Created Article',
         content: 'Can you believe I did this in a test?'
       })
-      .expect(200)
-      .then(() => {
-        return Article.findOne({
-          where: { title: 'Awesome POST-Created Article' }
-        });
-      })
-      .then((foundArticle) => {
-        expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
-        expect(foundArticle.content).to.equal('Can you believe I did this in a test?');
+      .expect(200);
+
+      const foundArticle = await Article.findOne({
+        where: { title: 'Awesome POST-Created Article' }
       });
+
+      expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
+      expect(foundArticle.content).to.equal('Can you believe I did this in a test?');
 
     });
 
     // Do not assume async operations (like db writes) will work; always check
-    xit('sends back JSON of the actual created article, not just the POSTed data', () => {
+    xit('sends back JSON of the actual created article, not just the POSTed data', async () => {
 
-      return agent
+      const res = await agent
       .post('/articles')
       .send({
         title: 'Coconuts',
         content: 'A full-sized coconut weighs about 1.44 kg (3.2 lb).',
         extraneous: 'Sequelize will quietly ignore this non-schema property'
       })
-      .expect(200)
-      .expect((res) => {
-        expect(res.body.article.extraneous).to.be.an('undefined');
-        expect(res.body.article.createdAt).to.exist; // eslint-disable-line no-unused-expressions
-      });
+      .expect(200);
+
+      expect(res.body.article.extraneous).to.be.an('undefined');
+      expect(res.body.article.createdAt).to.exist; // eslint-disable-line no-unused-expressions
 
     });
 
@@ -279,14 +258,11 @@ describe('Articles Route:', () => {
 
     let article;
 
-    beforeEach(() => {
+    beforeEach(async () => {
 
-      return Article.create({
+      article = await Article.create({
         title: 'Final Article',
         content: 'You can do it!'
-      })
-        .then((createdArticle) => {
-        article = createdArticle;
       });
 
     });
@@ -300,37 +276,34 @@ describe('Articles Route:', () => {
      *  }
      *
      **/
-    xit('updates an article', () => {
+    xit('updates an article', async () => {
 
-      return agent
+      const res = await agent
       .put('/articles/' + article.id)
       .send({
         title: 'Awesome PUT-Updated Article'
       })
-      .expect(200)
-      .expect((res) => {
-        expect(res.body.message).to.equal('Updated successfully');
-        expect(res.body.article.id).to.not.be.an('undefined');
-        expect(res.body.article.title).to.equal('Awesome PUT-Updated Article');
-        expect(res.body.article.content).to.equal('You can do it!');
-      });
+      .expect(200);
+
+      expect(res.body.message).to.equal('Updated successfully');
+      expect(res.body.article.id).to.not.be.an('undefined');
+      expect(res.body.article.title).to.equal('Awesome PUT-Updated Article');
+      expect(res.body.article.content).to.equal('You can do it!');
 
     });
 
-    xit('saves updates to the DB', () => {
+    xit('saves updates to the DB', async () => {
 
-      return agent
+      await agent
       .put('/articles/' + article.id)
       .send({
         title: 'Awesome PUT-Updated Article'
-      })
-      .then(() => {
-        return Article.findById(article.id);
-      })
-      .then((foundArticle) => {
-        expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
-        expect(foundArticle.title).to.equal('Awesome PUT-Updated Article');
       });
+
+      const foundArticle = await Article.findById(article.id);
+
+      expect(foundArticle).to.exist; // eslint-disable-line no-unused-expressions
+      expect(foundArticle.title).to.equal('Awesome PUT-Updated Article');
 
     });
 

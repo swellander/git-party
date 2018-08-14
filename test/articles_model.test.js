@@ -1,11 +1,11 @@
 'use strict';
 
-const Promise = require('bluebird')
+const Promise = require('bluebird');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-chai.use(sinonChai)
+chai.use(sinonChai);
 
 const Article = require('../server/models/article');
 const User = require('../server/models/user');
@@ -58,27 +58,28 @@ describe('The `Article` model', () => {
      *
      * http://docs.sequelizejs.com/manual/tutorial/models-definition.html
      */
-    it('includes `title` and `content` fields', () => {
+    it('includes `title` and `content` fields', async () => {
 
-      return article.save()
-      .then((savedArticle) => {
-        expect(savedArticle.title).to.equal('Migratory Birds');
-        expect(savedArticle.content).to.equal(fullText);
-      });
+      const savedArticle = await article.save();
+      expect(savedArticle.title).to.equal('Migratory Birds');
+      expect(savedArticle.content).to.equal(fullText);
 
     });
 
-    xit('requires `content`', () => {
+    xit('requires `content`', async () => {
 
       article.content = null;
 
-      return article.validate()
-      .then(() => {
-        throw new Error('validation should fail when content is null');
-      },
-      (result) => {
-        expect(result).to.be.an.instanceOf(Error);
-      });
+      let result, error;
+      try {
+        result = await article.validate();
+      } catch (err) {
+        error = err;
+      }
+
+      if (result) throw Error('validation should fail when content is null');
+
+      expect(error).to.be.an.instanceOf(Error);
 
     });
 
@@ -87,18 +88,21 @@ describe('The `Article` model', () => {
      *
      * http://docs.sequelizejs.com/manual/tutorial/models-definition.html#validations
      */
-    xit('requires `title` (in a more strict way than for `content`)', () => {
+    xit('requires `title` (in a more strict way than for `content`)', async () => {
 
       article.title = '';
 
-      return article.validate()
-      .then(() => {
-        throw new Error('validation should fail when title is empty');
-      },
-      (result) => {
-        expect(result).to.be.an.instanceOf(Error);
-        expect(result.message).to.contain('Validation error');
-      });
+      let result, error;
+      try {
+        result = await article.validate();
+      } catch (err) {
+        error = err;
+      }
+
+      if (result) throw Error('validation should fail when title is empty');
+
+      expect(error).to.be.an.instanceOf(Error);
+      expect(error.message).to.contain('Validation error');
 
     });
 
@@ -108,19 +112,18 @@ describe('The `Article` model', () => {
      *
      * http://docs.sequelizejs.com/variable/index.html#static-variable-DataTypes
      */
-    xit('can handle long `content`', () => {
+    xit('can handle long `content`', async () => {
 
       let articleContent = 'WALL-E (stylized with an interpunct as WALL·E) is a 2008 American computer-animated science-fiction comedy film produced by Pixar Animation Studios and released by Walt Disney Pictures. Directed by Andrew Stanton, the story follows a robot named WALL-E, who is designed to clean up an abandoned, waste-covered Earth far in the future. He falls in love with another robot named EVE, who also has a programmed task, and follows her into outer space on an adventure that changes the destiny of both his kind and humanity. Both robots exhibit an appearance of free will and emotions similar to humans, which develop further as the film progresses.';
 
-      return Article.create({
+      const result = await Article.create({
         title: 'WALL-E',
         content: articleContent
-      })
-      .then((result) => {
-        expect(result).to.be.an('object');
-        expect(result.title).to.equal('WALL-E');
-        expect(result.content).to.equal(articleContent);
       });
+
+      expect(result).to.be.an('object');
+      expect(result.title).to.equal('WALL-E');
+      expect(result.content).to.equal(articleContent);
 
     });
 
@@ -139,15 +142,15 @@ describe('The `Article` model', () => {
     describe('`truncate` instance method', () => {
 
       beforeEach(() => {
-        sinon.spy(article, 'update')
-        sinon.spy(article, 'save')
-        sinon.spy(Article, 'update')
+        sinon.spy(article, 'update');
+        sinon.spy(article, 'save');
+        sinon.spy(Article, 'update');
       });
 
       afterEach(() => {
-        article.update.restore()
-        article.save.restore()
-        Article.update.restore()
+        article.update.restore();
+        article.save.restore();
+        Article.update.restore();
       });
 
       /**
@@ -177,7 +180,7 @@ describe('The `Article` model', () => {
 
       });
 
-      xit('does not save the instance once truncated', (done) => {
+      xit('does -> NOT <- save the instance once truncated', async () => {
 
         expect(article.content).to.equal(fullText);
 
@@ -192,13 +195,9 @@ describe('The `Article` model', () => {
         /* eslint-enable no-unused-expressions */
 
         // seriously don't do it
-        setTimeout(() => {
-          Article.findAll()
-          .then((articles) => {
-            expect(articles).to.have.length(0);
-            done();
-          });
-        }, 100);
+        await Promise.delay(100);
+        const articles = await Article.findAll();
+        expect(articles).to.have.length(0);
 
       });
 
@@ -224,13 +223,11 @@ describe('The `Article` model', () => {
         return Promise.all(articles);
       });
 
-      xit('finds one specific article by its `title`', () => {
+      xit('finds one specific article by its `title`', async () => {
 
-        return Article.findByTitle('Migratory Birds')
-        .then((foundArticle) => {
-          expect(foundArticle).not.to.be.an.instanceOf(Array);
-          expect(foundArticle.content).to.equal(fullText);
-        });
+        const foundArticle = await Article.findByTitle('Migratory Birds');
+        expect(foundArticle).not.to.be.an.instanceOf(Array);
+        expect(foundArticle.content).to.equal(fullText);
 
       });
 
@@ -247,29 +244,26 @@ describe('The `Article` model', () => {
      * http://docs.sequelizejs.com/manual/tutorial/associations.html#belongsto
      */
 
-    xit("belongs to a user, who is stored as the article's `author`", () => {
+    xit("belongs to a user, who is stored as the article's `author`", async () => {
 
-      let creatingUser = User.create({ name: 'Alatar the Blue'});
-      let creatingArticle = Article.create({
+      const creatingUser = User.create({ name: 'Alatar the Blue'});
+      const creatingArticle = Article.create({
         title: 'Blue Wizards',
         content: 'They are two of the five Wizards (or Istari) sent by the Valar to Middle-earth to aid in the struggle against Sauron.'
       });
 
-      return Promise.all([creatingUser, creatingArticle])
-      .spread((createdUser, createdArticle) => {
-        // this method `setAuthor` method automatically exists if you set up the association correctly
-        return createdArticle.setAuthor(createdUser);
-      })
-      .then(() => {
-        return Article.findOne({
-          where: { title: 'Blue Wizards' },
-          include: { model: User, as: 'author' }
-        });
-      })
-      .then((foundArticle) => {
-        expect(foundArticle.author).to.exist; // eslint-disable-line no-unused-expressions
-        expect(foundArticle.author.name).to.equal('Alatar the Blue');
+      const [createdUser, createdArticle] = await Promise.all([creatingUser, creatingArticle]);
+
+      // this method `setAuthor` automatically exists if you set up the association correctly
+      await createdArticle.setAuthor(createdUser);
+
+      const foundArticle = await Article.findOne({
+        where: { title: 'Blue Wizards' },
+        include: { model: User, as: 'author' }
       });
+
+      expect(foundArticle.author).to.exist; // eslint-disable-line no-unused-expressions
+      expect(foundArticle.author.name).to.equal('Alatar the Blue');
 
     });
 
@@ -291,41 +285,33 @@ describe('The `Article` model', () => {
       });
     });
 
-    xit('is originally 0, even if not explicitly set', () => {
+    xit('is originally 0, even if not explicitly set', async () => {
 
-      return Article.findOne({where: {title: 'Biological Immortality'}})
-      .then((foundArticle) => {
-        expect(foundArticle.version).to.equal(0);
-      });
+      const foundArticle = await Article.findOne({where: {title: 'Biological Immortality'}});
+      expect(foundArticle.version).to.equal(0);
 
     });
 
-    xit('increments by 1 every time the article is updated', () => {
+    xit('increments by 1 every time the article is updated', async () => {
 
-      return Article.findOne({where: {title: 'Biological Immortality'}})
-      .then((foundArticle) => {
-        expect(foundArticle.version).to.equal(0);
-        return foundArticle.update({
-          content: 'Biological immortality is a lie!'
-        });
-      })
-      .then((updatedArticle) => {
-        expect(updatedArticle.version).to.equal(1);
-        return updatedArticle.update({
-          content: 'Have you seen the 19th century painting of Keanu Reeves?'
-        });
-      })
-      .then((updatedArticle) => {
-        expect(updatedArticle.version).to.equal(2);
+      const foundArticle = await Article.findOne({where: {title: 'Biological Immortality'}});
+      expect(foundArticle.version).to.equal(0);
 
-        // "reload" the article from the database,
-        // just to make sure that the changes to the version
-        // are saved properly!
-        return updatedArticle.reload();
-      })
-      .then((reloadedArticle) => {
-        expect(reloadedArticle.version).to.equal(2);
+      const updatedArticle = await foundArticle.update({
+        content: 'Biological immortality is a lie!'
       });
+      expect(updatedArticle.version).to.equal(1);
+
+      const updatedArticle2 = await updatedArticle.update({
+        content: 'Have you seen the 19th century painting of Keanu Reeves?'
+      });
+      expect(updatedArticle2.version).to.equal(2);
+
+      // we "reload" the article from the database,
+      // just to make sure that the changes to the version
+      // were saved properly!
+      const reloadedArticle = await updatedArticle.reload();
+      expect(reloadedArticle.version).to.equal(2);
 
     });
 
@@ -342,20 +328,18 @@ describe('The `Article` model', () => {
      *
      * To activate this spec, change `xit` to `it`
      */
-    xit('is a custom getter', () => {
+    xit('is a custom getter', async () => {
 
       // tags should have a `defaultValue` that is an empty array.
       expect(Article.attributes.tags.defaultValue).to.deep.equal([]);
 
       // main functionality of tags
-      return Article.create({
+      const createdArticle = await Article.create({
         title: 'Taggy',
         content: 'So Taggy',
         tags: ['tag1', 'tag2', 'tag3']
-      })
-      .then((createdArticle) => {
-        expect(createdArticle.tags).to.equal('tag1, tag2, tag3');
       });
+      expect(createdArticle.tags).to.equal('tag1, tag2, tag3');
 
     });
 

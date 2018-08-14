@@ -93,7 +93,7 @@ describe('The `Article` model', () => {
 
       return article.validate()
       .then(() => {
-        throw new Error('validation should fail when content is empty');
+        throw new Error('validation should fail when title is empty');
       },
       (result) => {
         expect(result).to.be.an.instanceOf(Error);

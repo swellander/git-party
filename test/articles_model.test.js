@@ -134,7 +134,7 @@ describe('The `Article` model', () => {
  * Article model in your code below, the Routes will also fail. Make commits!
  */
 
-  describe('options definition', () => {
+  describe('method definitions', () => {
 
     describe('`truncate` instance method', () => {
 

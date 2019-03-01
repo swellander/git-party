@@ -38,7 +38,7 @@ Article.prototype.truncate = function (length) {
     // return [Article.find({where: {content: this.content}})].slice(0, length);
     // const fullText = Article.content;
     // return fullText.slice(0, length)
-    return this.content = [this.content].slice(0, length);
+    return [this.content].slice(0, length);
 }
 
 Article.findByTitle = function () {

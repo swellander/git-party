@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const Article = require('../models/article');
+const Article = require("../models/article");
 
 /**
  *
@@ -13,6 +13,9 @@ const Article = require('../models/article');
  *
  */
 
-
+router.get("/articles", async (req, res, next) => {
+  const articles = await Article.findAll();
+  res.json(articles);
+});
 
 module.exports = router;
